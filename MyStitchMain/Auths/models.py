@@ -15,7 +15,7 @@ class AppUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     phone = PhoneNumberField(unique = True)
     address = models.TextField(max_length=500)
-    Gender = models.CharField(max_length = 20, choices=genderChoice, default="Male")
+    gender = models.CharField(max_length = 20, choices=genderChoice, default="Male")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
