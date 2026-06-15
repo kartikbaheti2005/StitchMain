@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "phonenumber_field",
+    'Auths',
 ]
 
 MIDDLEWARE = [
@@ -115,3 +117,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Set the default region code to India
+PHONENUMBER_DEFAULT_REGION = "IN"
