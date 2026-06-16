@@ -10,6 +10,22 @@ lowerBodyChoice = [
     ("Leggings","Leggings"),
 ]
 
+# Create your models here.
+class LowerBody(models.Model):
+    length = models.IntegerField(blank = True)
+    hips = models.IntegerField(blank = True)
+    thies = models.IntegerField(blank = True)
+    knee = models.IntegerField(blank = True)
+    ankle = models.IntegerField(blank = True)
+    ankle = models.IntegerField(blank = True)
+    Clothtype = models.CharField(max_length = 20, choices = lowerBodyChoice, default ="None")
+    #requirement = models.ForeignKey(Options, on_delete = models.CASCADE)
+
+def __str__(self):
+    return self.clothType
+ 
+
+
 upperBodyChoice = [
     (" "," "),
     ("Shirt","Shirt"),
@@ -25,3 +41,25 @@ upperBodyChoice = [
 
     
 # Create your models here.
+class Options(models.Model):
+    text = models.TextField(max_length=200)
+
+    def __str__(self):
+        return self.text
+    
+class UpperBody(models.Model):
+    length = models.IntegerField(blank = True)
+    shoulder = models.IntegerField(blank = True)
+    armLength = models.IntegerField(blank = True)
+    fourarmLength = models.IntegerField(blank = True)
+    neck = models.IntegerField(blank = True)
+    chest = models.IntegerField(blank = True)
+    waist = models.IntegerField(blank = True)
+    hips = models.IntegerField(blank = True)
+    clothType = models.CharField(max_length=20, choices=upperBodyChoice, default="None")
+    pocket = models.BooleanField(default=False)
+    requirments = models.ForeignKey(Options, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.clothType
