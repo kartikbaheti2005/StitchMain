@@ -10,6 +10,25 @@ lowerBodyChoice = [
     ("Leggings","Leggings"),
 ]
 
+upperBodyChoice = [
+    (" "," "),
+    ("Shirt","Shirt"),
+    ("Kurta","Kurta"),
+    ("Kurti","Kurti"),
+    ("Shrewani","Shrewani"),
+    ("Coat","Coat"),
+    ("Jacket","Jacket"),
+    ("Blouse","Blouse"),
+    ("Gown","Gown"),
+    ("Frock","Frock"),
+]
+class Options(models.Model):
+    text = models.TextField(max_length=200)
+
+    def __str__(self):
+        return self.text
+    
+
 # Create your models here.
 class LowerBody(models.Model):
     length = models.IntegerField(blank = True)
@@ -23,30 +42,6 @@ class LowerBody(models.Model):
 
 def __str__(self):
     return self.clothType
- 
-
-
-upperBodyChoice = [
-    (" "," "),
-    ("Shirt","Shirt"),
-    ("Kurta","Kurta"),
-    ("Kurti","Kurti"),
-    ("Shrewani","Shrewani"),
-    ("Coat","Coat"),
-    ("Jacket","Jacket"),
-    ("Blouse","Blouse"),
-    ("Gown","Gown"),
-    ("Frock","Frock"),
-]
-
-    
-# Create your models here.
-class Options(models.Model):
-    text = models.TextField(max_length=200)
-
-    def __str__(self):
-        return self.text
-    
 class UpperBody(models.Model):
     length = models.IntegerField(blank = True)
     shoulder = models.IntegerField(blank = True)
