@@ -2,11 +2,10 @@ from django.db import models
 
 lowerBodyChoice = [
     (" "," "),
-    ("Pant","Pant"),
+    ("Trouser","Trouser"),
     ("Barmuda","Barmuda"),
     ("Paijama","Paijama"),
     ("Skirt","Skirt"),
-    ("Leggings","Leggings"),
     ("Leggings","Leggings"),
 ]
 
@@ -22,6 +21,27 @@ upperBodyChoice = [
     ("Gown","Gown"),
     ("Frock","Frock"),
 ]
+
+buttonChoice = [
+    ("Normal","Normal"),
+    ("Snap","Snap"),
+    ("Flat Shank","Flat Shank"),
+    ("Hook","Hook"),
+]
+
+sleeveChoice = [
+    ("Full","Full"),
+    ("Half","Half"),
+    ("No Sleeve","No Sleeve"),
+]
+
+trouserChoice = [
+    ("Normal","Normal"),
+    ("Pencil","Pencil"),
+    ("",""),
+]
+
+# Create your models here.
 class Options(models.Model):
     text = models.TextField(max_length=200)
 
@@ -29,32 +49,42 @@ class Options(models.Model):
         return self.text
     
 
-# Create your models here.
 class LowerBody(models.Model):
-    length = models.IntegerField(blank = True)
-    hips = models.IntegerField(blank = True)
-    thies = models.IntegerField(blank = True)
-    knee = models.IntegerField(blank = True)
-    ankle = models.IntegerField(blank = True)
-    ankle = models.IntegerField(blank = True)
-    Clothtype = models.CharField(max_length = 20, choices = lowerBodyChoice, default ="None")
-    #requirement = models.ForeignKey(Options, on_delete = models.CASCADE)
+    length = models.IntegerField(default=0)
+    hips = models.IntegerField(default=0)
+    thigh = models.IntegerField(default=0)
+    knee = models.IntegerField(default=0)
+    ankle = models.IntegerField(default=0)
+    pantBottom = models.IntegerField(default=0)
+    uCrouch = models.IntegerField(default=0)
+    clothType = models.CharField(max_length=20, choices=lowerBodyChoice, default=" ")
+    requirements = models.ForeignKey(Options, on_delete = models.CASCADE, null=True, blank=True)
 
-def __str__(self):
-    return self.clothType
+    def __str__(self):
+        return self.clothType
+
 class UpperBody(models.Model):
-    length = models.IntegerField(blank = True)
-    shoulder = models.IntegerField(blank = True)
-    armLength = models.IntegerField(blank = True)
-    fourarmLength = models.IntegerField(blank = True)
-    neck = models.IntegerField(blank = True)
-    chest = models.IntegerField(blank = True)
-    waist = models.IntegerField(blank = True)
-    hips = models.IntegerField(blank = True)
-    clothType = models.CharField(max_length=20, choices=upperBodyChoice, default="None")
-    pocket = models.BooleanField(default=False)
-    requirments = models.ForeignKey(Options, on_delete=models.CASCADE)
-
+    length = models.IntegerField(default=0)
+    chest = models.IntegerField(default=0)
+    upperChest = models.IntegerField(default=0)
+    waist = models.IntegerField(default=0)
+    hips = models.IntegerField(default=0)
+    shoulder = models.IntegerField(default=0)
+    sleeves = models.IntegerField(default=0)
+    biceps = models.IntegerField(default=0)
+    armHold = models.IntegerField(default=0)
+    elbow = models.IntegerField(default=0)
+    collar = models.IntegerField(default=0)
+    backLength = models.IntegerField(default=0)
+    crossBack = models.IntegerField(default=0)
+    bustLength = models.IntegerField(default=0)
+    apexGap = models.IntegerField(default=0)
+    bottomWidth = models.IntegerField(default=0)
+    clothType = models.CharField(max_length=20, choices=upperBodyChoice, default=" ")
+    pocket = models.BooleanField(default = False)
+    button = models.CharField(max_length=20, choices=buttonChoice, default="Normal")
+    sleeveType = models.CharField(max_length=20, choices=sleeveChoice, default="Full")
+    requirments = models.ForeignKey(Options, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.clothType
