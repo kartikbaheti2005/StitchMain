@@ -10,18 +10,18 @@ lowerBodyChoice = [
     ("Leggings","Leggings"),
 ]
 
+upperBodyChoice = [
+    (" "," "),
+    ("Shirt","Shirt"),
+    ("Kurta","Kurta"),
+    ("Kurti","Kurti"),
+    ("Shrewani","Shrewani"),
+    ("Coat","Coat"),
+    ("Jacket","Jacket"),
+    ("Blouse","Blouse"),
+    ("Gown","Gown"),
+    ("Frock","Frock"),
+]
+
+    
 # Create your models here.
-class LowerBody(models.Model):
-    length = models.IntegerField(blank = True)
-    hips = models.IntegerField(blank = True)
-    thies = models.IntegerField(blank = True)
-    knee = models.IntegerField(blank = True)
-    ankle = models.IntegerField(blank = True)
-    ankle = models.IntegerField(blank = True)
-    Clothtype = models.CharField(max_length = 20, choices = lowerBodyChoice, default ="None")
-    #requirement = models.ForeignKey(Options, on_delete = models.CASCADE)
-
-def __str__(self):
-    return self.clothType
- 
-
