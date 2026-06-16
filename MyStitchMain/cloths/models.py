@@ -22,6 +22,10 @@ upperBodyChoice = [
     ("Frock","Frock"),
 ]
 
+allClothsChoice = lowerBodyChoice + upperBodyChoice
+allClothsChoice = [item for item in allClothsChoice if item != (" ", " ")]
+
+
 buttonChoice = [
     ("Normal","Normal"),
     ("Snap","Snap"),
@@ -88,3 +92,10 @@ class UpperBody(models.Model):
 
     def __str__(self):
         return self.clothType
+    
+class ClothPrice(models.Model):
+    cloth_type = models.CharField(max_length=20, choices=allClothsChoice, default=" ", unique=True)
+    base_price = models.DecimalField(max_digits=8, decimal_places=2)
+    
+    def __str__(self):
+        return f"{self.cloth_type} - ₹{self.base_price}"
