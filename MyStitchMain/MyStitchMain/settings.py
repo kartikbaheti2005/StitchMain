@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "phonenumber_field",
     'Auths',
     'cloths',
+    'Billing',
+    'Order',
 ]
 
 MIDDLEWARE = [

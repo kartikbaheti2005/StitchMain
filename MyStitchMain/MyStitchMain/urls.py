@@ -22,4 +22,5 @@ from cloths import urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Auths.urls')),
+    path('order/', include('Order.urls')),
 ]
