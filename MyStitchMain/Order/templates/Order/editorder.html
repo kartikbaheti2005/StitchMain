@@ -1,5 +1,261 @@
 {% extends "base.html" %}
+{% load static %}
+{% block title %}Edit Order #{{ order.pk }}{% endblock %}
 
 {% block content %}
 
-{% endblock content %}
+<div class="page-header">
+    <div>
+        <p class="text-muted" style="margin-bottom: 4px;">
+            <a href="{% url 'oderDetailView' order.pk %}" style="color: #534AB7;">← Order #{{ order.pk }}</a>
+        </p>
+        <h1>Edit Order #{{ order.pk }}</h1>
+    </div>
+</div>
+
+<form method="post" id="orderForm">
+    {% csrf_token %}
+
+    <div class="detail-grid">
+
+        <!-- Left: Order Info -->
+        <div>
+            <div class="card">
+                <p class="card-section-title" style="margin-bottom: 1rem;">Order Details</p>
+
+                <div class="form-group">
+                    <label for="{{ order_form.customer.id_for_label }}">Customer</label>
+                    {{ order_form.customer }}
+                    {% if order_form.customer.errors %}
+                        <p style="color: #a32d2d; font-size: 13px; margin-top: 4px;">{{ order_form.customer.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ order_form.status.id_for_label }}">Status</label>
+                    {{ order_form.status }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ order_form.days.id_for_label }}">Days to Complete</label>
+                    {{ order_form.days }}
+                    <p style="font-size: 12px; color: #888; margin-top: 4px;">
+                        Out date = {{ order.in_time|date:"d M Y" }} + this many days
+                    </p>
+                </div>
+            </div>
+
+            <!-- Toggles -->
+            <div class="card">
+                <p class="card-section-title" style="margin-bottom: 1rem;">Measurements</p>
+
+                <label class="toggle-row" for="add_upper">
+                    <div>
+                        <span style="font-weight: 500; font-size: 14px;">Upper Body</span>
+                        <p style="margin: 0; font-size: 12px; color: #888;">Shirt, Kurta, Coat, etc.</p>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="add_upper" name="add_upper"
+                            {% if has_upper %}checked{% endif %}
+                            onchange="toggleSection('upper-section', this)">
+                        <span class="toggle-knob"></span>
+                    </div>
+                </label>
+
+                <label class="toggle-row" for="add_lower" style="margin-top: 0.75rem;">
+                    <div>
+                        <span style="font-weight: 500; font-size: 14px;">Lower Body</span>
+                        <p style="margin: 0; font-size: 12px; color: #888;">Trouser, Pyjama, Skirt, etc.</p>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="add_lower" name="add_lower"
+                            {% if has_lower %}checked{% endif %}
+                            onchange="toggleSection('lower-section', this)">
+                        <span class="toggle-knob"></span>
+                    </div>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Save Changes</button>
+                <a href="{% url 'oderDetailView' order.pk %}" class="btn" style="flex: 1; justify-content: center; border-color: #ddd; color: #444;">Cancel</a>
+            </div>
+        </div>
+
+        <!-- Right: Measurement forms -->
+        <div>
+
+            <!-- Upper Body -->
+            <div id="upper-section" class="card" {% if not has_upper %}style="display: none;"{% endif %}>
+                <div class="card-section-header">
+                    <span class="card-section-title">Upper Body Measurements</span>
+                    <span class="cloth-type-badge">inches</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Cloth Type</label>
+                    {{ upper_form.clothType }}
+                </div>
+
+                <div class="measurements-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
+                    {% for field in upper_form %}
+                        {% if field.name != 'clothType' and field.name != 'pocket' and field.name != 'button' and field.name != 'sleeveType' %}
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 12px;">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="options-row" style="margin-top: 1rem;">
+                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                        <label>Sleeve Type</label>
+                        {{ upper_form.sleeveType }}
+                    </div>
+                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                        <label>Button</label>
+                        {{ upper_form.button }}
+                    </div>
+                    <div class="form-group" style="flex: 0; margin-bottom: 0;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding-top: 28px;">
+                            {{ upper_form.pocket }}
+                            <span>Pocket</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lower Body -->
+            <div id="lower-section" class="card" {% if not has_lower %}style="display: none;"{% endif %}>
+                <div class="card-section-header">
+                    <span class="card-section-title">Lower Body Measurements</span>
+                    <span class="cloth-type-badge">inches</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Cloth Type</label>
+                    {{ lower_form.clothType }}
+                </div>
+
+                <div class="measurements-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
+                    {% for field in lower_form %}
+                        {% if field.name != 'clothType' %}
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 12px;">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Placeholder when nothing toggled -->
+            <div id="empty-placeholder" class="card"
+                style="text-align: center; padding: 3rem 2rem; color: #888;
+                {% if has_upper or has_lower %}display: none;{% endif %}">
+                <div style="font-size: 2rem; margin-bottom: 0.75rem;">📐</div>
+                <p style="margin: 0; font-size: 14px;">Toggle Upper or Lower Body above to add measurements.</p>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<style>
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-knob {
+    position: absolute;
+    inset: 0;
+    background: #ddd;
+    border-radius: 22px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.toggle-knob::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.2s;
+}
+
+.toggle-switch input:checked + .toggle-knob {
+    background: #534AB7;
+}
+
+.toggle-switch input:checked + .toggle-knob::after {
+    transform: translateX(18px);
+}
+
+#orderForm select,
+#orderForm input[type="number"],
+#orderForm input[type="text"] {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #fff;
+    color: #1a1a2e;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+#orderForm select:focus,
+#orderForm input[type="number"]:focus,
+#orderForm input[type="text"]:focus {
+    border-color: #534AB7;
+    box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.12);
+}
+
+#orderForm input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #534AB7;
+}
+</style>
+
+<script>
+function toggleSection(id, checkbox) {
+    const section = document.getElementById(id);
+    section.style.display = checkbox.checked ? 'block' : 'none';
+    updatePlaceholder();
+}
+
+function updatePlaceholder() {
+    const upperVisible = document.getElementById('add_upper').checked;
+    const lowerVisible = document.getElementById('add_lower').checked;
+    document.getElementById('empty-placeholder').style.display =
+        (upperVisible || lowerVisible) ? 'none' : 'block';
+}
+</script>
+
+{% endblock %}
