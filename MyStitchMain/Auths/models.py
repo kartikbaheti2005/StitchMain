@@ -21,3 +21,9 @@ class AppUser(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def formatted_phone(self):
+        phone = str(self.phone)
+        if phone.startswith("+91") and len(phone) == 13:
+            return f"+91 {phone[3:8]} {phone[8:]}"
+        return phone

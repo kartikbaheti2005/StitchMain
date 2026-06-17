@@ -1,9 +1,72 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Orders{% endblock %}
 
 {% block content %}
 
-{% for order in orders%}
-    {{order}}
-{% endfor %}
+<div class="page-header">
+    <div>
+        <h1>Orders</h1>
+        <p class="text-muted">{{ orders.count }} order{{ orders.count|pluralize }} total</p>
+    </div>
+    <a href="{% url 'orderAdd' %}" class="btn btn-primary">+ Add Order</a>
+</div>
+
+{% if orders %}
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Upper Body</th>
+                <th>Lower Body</th>
+                <th>Status</th>
+                <th>In Time</th>
+                <th>Out Time</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td style="color: #888; font-size: 13px;">{{ order.pk }}</td>
+                <td>
+                    <span class="customer-name">{{ order.customer }}</span>
+                </td>
+                <td>{{ order.upperBody|default:"—" }}</td>
+                <td>{{ order.lowerBody|default:"—" }}</td>
+                <td>
+                    <span class="status-badge status-{{ order.status|lower }}">
+                        {{ order.status }}
+                    </span>
+                </td>
+                <td style="font-size: 13px; color: #666;">{{ order.in_time|date:"d M Y, H:i" }}</td>
+                <td style="font-size: 13px; color: #666;">{{ order.out_time|date:"d M Y, H:i" }}</td>
+                <td>
+                    <div class="action-btns">
+                        <a href="{% url 'oderDetailView' order.pk %}" class="btn btn-sm">View</a>
+                        <a href="{% url 'orderedit' order.pk %}" class="btn btn-sm">Edit</a>
+                        <form method="post" action="{% url 'orderdelete' order.pk %}" style="display:inline;" onsubmit="return confirm('Delete this order?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">📋</div>
+    <h3>No orders yet</h3>
+    <p class="text-muted">Get started by adding your first order.</p>
+    <a href="{% url 'orderAdd' %}" class="btn btn-primary" style="margin-top: 1rem;">+ Add Order</a>
+</div>
+{% endif %}
 
 {% endblock %}

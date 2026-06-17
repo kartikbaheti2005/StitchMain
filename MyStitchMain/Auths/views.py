@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from .forms import SignupForm, AppUserForm, LoginForm
 from django.shortcuts import redirect, render
 
@@ -37,3 +37,6 @@ def login_view(request):
 
 def home_view(request):
     return render(request, 'home.html')
+
+def logout_view(request):
+    logout(request)

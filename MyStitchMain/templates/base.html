@@ -5,22 +5,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Site{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
 
     <nav>
-        <p>nav bar</p>
+        <a href="{% url 'home' %}" class="brand">My Site</a>
+
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <span class="nav-username">{{ user.username }}</span>
+                <a href="{% url 'orderAdd' %}" class="btn btn-primary">Add Order</a>
+                <form method="post" action="{% url 'logout_view' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login_view' %}" class="btn">Login</a>
+                <a href="{% url 'signup_view' %}" class="btn btn-primary">Sign Up</a>
+            {% endif %}
+        </div>
     </nav>
 
     <main>
-        <!-- Child templates will inject their unique content right here -->
         {% block content %}
         {% endblock %}
     </main>
 
     <footer>
-        <p>footer</p>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <span class="brand">My Site</span>
+                <p>Building something great, one page at a time.</p>
+            </div>
+
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Navigate</h4>
+                    <a href="{% url 'home' %}">Home</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'orderAdd' %}">Add Order</a>
+                    {% endif %}
+                </div>
+
+                <div class="footer-col">
+                    <h4>Account</h4>
+                    {% if user.is_authenticated %}
+                        <span>Signed in as {{ user.username }}</span>
+                        <form method="post" action="{% url 'logout_view' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="footer-link-btn">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login_view' %}">Login</a>
+                        <a href="{% url 'signup_view' %}">Sign Up</a>
+                    {% endif %}
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <a href="mailto:hello@mysite.com">hello@mysite.com</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; {% now "Y" %} My Site. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
     </footer>
 
 </body>

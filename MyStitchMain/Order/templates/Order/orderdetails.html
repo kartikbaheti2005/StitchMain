@@ -1,5 +1,199 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order #{{ order.pk }} — {{ order.customer }}{% endblock %}
 
 {% block content %}
-{{order}}
+
+<div class="page-header">
+    <div>
+        <p class="text-muted" style="margin-bottom: 4px;">
+            <a href="{% url 'orderview' %}" style="color: #534AB7;">← All Orders</a>
+        </p>
+        <h1>Order #{{ order.pk }}</h1>
+    </div>
+    <div style="display: flex; gap: 8px;">
+        <a href="{% url 'orderedit' order.pk %}" class="btn">Edit</a>
+        <form method="post" action="{% url 'orderdelete' order.pk %}" style="display:inline;" onsubmit="return confirm('Delete this order?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
+
+<!-- Order Summary -->
+<div class="detail-grid">
+
+    <div class="card">
+        <p class="section-label">Customer</p>
+        <p class="detail-value">{{ order.customer }}</p>
+        
+        <p class="section-label" style="margin-top: 1rem;">Phone number</p>
+        <p class="detail-value">{{ order.customer.formatted_phone }}</p>
+
+        <p class="section-label" style="margin-top: 1rem;">Status</p>
+        <span class="status-badge status-{{ order.status|lower }}">{{ order.status }}</span>
+
+        <p class="section-label" style="margin-top: 1rem;">In Time</p>
+        <p class="detail-value">{{ order.in_time|date:"d M Y, H:i" }}</p>
+
+        <p class="section-label" style="margin-top: 1rem;">Out Time</p>
+        <p class="detail-value">{{ order.out_time|date:"d M Y, H:i" }}</p>
+    </div>
+
+    <!-- Upper Body -->
+    {% if order.upperBody %}
+    <div class="card">
+        <div class="card-section-header">
+            <span class="card-section-title">Upper Body</span>
+            <span class="cloth-type-badge">{{ order.upperBody.clothType }}</span>
+        </div>
+
+        <div class="measurements-grid">
+            <div class="measurement-item">
+                <span class="m-label">Length</span>
+                <span class="m-value">{{ order.upperBody.length }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Chest</span>
+                <span class="m-value">{{ order.upperBody.chest }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Upper Chest</span>
+                <span class="m-value">{{ order.upperBody.upperChest }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Waist</span>
+                <span class="m-value">{{ order.upperBody.waist }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Hips</span>
+                <span class="m-value">{{ order.upperBody.hips }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Shoulder</span>
+                <span class="m-value">{{ order.upperBody.shoulder }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Sleeves</span>
+                <span class="m-value">{{ order.upperBody.sleeves }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Biceps</span>
+                <span class="m-value">{{ order.upperBody.biceps }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Arm Hold</span>
+                <span class="m-value">{{ order.upperBody.armHold }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Elbow</span>
+                <span class="m-value">{{ order.upperBody.elbow }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Collar</span>
+                <span class="m-value">{{ order.upperBody.collar }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Back Length</span>
+                <span class="m-value">{{ order.upperBody.backLength }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Cross Back</span>
+                <span class="m-value">{{ order.upperBody.crossBack }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Bust Length</span>
+                <span class="m-value">{{ order.upperBody.bustLength }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Apex Gap</span>
+                <span class="m-value">{{ order.upperBody.apexGap }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Bottom Width</span>
+                <span class="m-value">{{ order.upperBody.bottomWidth }}"</span>
+            </div>
+        </div>
+
+        <div class="options-row">
+            <div class="option-chip">
+                <span class="m-label">Sleeve Type</span>
+                <span class="m-value">{{ order.upperBody.sleeveType }}</span>
+            </div>
+            <div class="option-chip">
+                <span class="m-label">Button</span>
+                <span class="m-value">{{ order.upperBody.button }}</span>
+            </div>
+            <div class="option-chip">
+                <span class="m-label">Pocket</span>
+                <span class="m-value">{% if order.upperBody.pocket %}Yes{% else %}No{% endif %}</span>
+            </div>
+        </div>
+
+        {% if order.upperBody.requirments %}
+        <div class="requirements-box">
+            <span class="m-label">Requirements</span>
+            <p style="margin: 4px 0 0; color: #333;">{{ order.upperBody.requirments }}</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Lower Body -->
+    {% if order.lowerBody %}
+    <div class="card">
+        <div class="card-section-header">
+            <span class="card-section-title">Lower Body</span>
+            <span class="cloth-type-badge">{{ order.lowerBody.clothType }}</span>
+        </div>
+
+        <div class="measurements-grid">
+            <div class="measurement-item">
+                <span class="m-label">Length</span>
+                <span class="m-value">{{ order.lowerBody.length }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Hips</span>
+                <span class="m-value">{{ order.lowerBody.hips }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Thigh</span>
+                <span class="m-value">{{ order.lowerBody.thigh }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Knee</span>
+                <span class="m-value">{{ order.lowerBody.knee }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Ankle</span>
+                <span class="m-value">{{ order.lowerBody.ankle }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">Pant Bottom</span>
+                <span class="m-value">{{ order.lowerBody.pantBottom }}"</span>
+            </div>
+            <div class="measurement-item">
+                <span class="m-label">U-Crouch</span>
+                <span class="m-value">{{ order.lowerBody.uCrouch }}"</span>
+            </div>
+        </div>
+
+        {% if order.lowerBody.requirements %}
+        <div class="requirements-box">
+            <span class="m-label">Requirements</span>
+            <p style="margin: 4px 0 0; color: #333;">{{ order.lowerBody.requirements }}</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if not order.upperBody and not order.lowerBody %}
+    <div class="card" style="color: #888; text-align: center; padding: 2rem;">
+        No measurements added to this order.
+    </div>
+    {% endif %}
+
+</div>
+
 {% endblock %}

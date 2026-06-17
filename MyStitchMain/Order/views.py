@@ -4,8 +4,9 @@ from .forms import OrderForm
 
 # Create your views here.
 def orderview(request):
-    print(request)
     orders = Order.objects.all()
+    print("Order count:", orders.count())  # ← add this
+    print("Orders:", orders)   
     context = {
         "orders" : orders
     }
